@@ -7,7 +7,9 @@
 
 <script>
 const room = "{{ room }}";
-const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${room}/`);
+// Use wss for HTTPS, ws for HTTP
+const scheme = window.location.protocol === "https:" ? "wss" : "ws";
+const socket = new WebSocket(`${scheme}://${window.location.host}/ws/chat/${room}/`);
 
 socket.onmessage = e => {
     let data = JSON.parse(e.data);
