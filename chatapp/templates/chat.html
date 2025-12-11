@@ -1,0 +1,22 @@
+<h2>Private Chat Room</h2>
+
+<input id="msg" placeholder="Type message...">
+<button onclick="sendMsg()">Send</button>
+
+<ul id="messages"></ul>
+
+<script>
+const room = "{{ room }}";
+const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${room}/`);
+
+socket.onmessage = e => {
+    let data = JSON.parse(e.data);
+    document.getElementById("messages").innerHTML += `<li>${data.message}</li>`;
+};
+
+function sendMsg() {
+    let msg = document.getElementById("msg").value;
+    socket.send(JSON.stringify({ "message": msg }));
+    document.getElementById("msg").value = "";
+}
+</script>

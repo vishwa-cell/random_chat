@@ -1,0 +1,32 @@
+<h2>1-to-1 Random Chat</h2>
+
+<button id="joinBtn">Join Chat</button>
+
+<p id="status"></p>
+
+<script>
+document.getElementById("joinBtn").onclick = () => {
+    fetch("/match/")
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "waiting") {
+            document.getElementById("status").innerHTML = "Waiting for someone...";
+            pollMatch(data.user);
+        } else {
+            window.location.href = "/chat/" + data.room + "/";
+        }
+    });
+};
+
+function pollMatch(user_id) {
+    setInterval(() => {
+        fetch("/match/")
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "matched" && data.user !== user_id) {
+                window.location.href = "/chat/" + data.room + "/";
+            }
+        });
+    }, 2000);
+}
+</script>
